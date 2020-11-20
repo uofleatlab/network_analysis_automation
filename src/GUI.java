@@ -32,62 +32,62 @@ public class GUI implements ActionListener {
     private File file_upload;
     int line_number = 0;
     //define column numbers for variables
-    int fowg = 0;
-    int drivethin = 0;
-    int overvalwtshape = 0;
-    int fearreject = 0;
-    int fearmstkes = 0;
-    int highstndrds = 0;
-    int SAA = 0;
-    int worry = 0;
-    int selfcrit = 0;
-    int fearlosgcntrol = 0;
-    int bodydiss = 0;
-    int feelineffectve = 0;
-    int cogrestraint = 0;
-    int eatrules = 0;
-    int binge = 0;
-    int excexercse = 0;
-    int bodycheck = 0;
-    int impulse = 0;
-    int shame = 0;
-    int guilt = 0;
-    int depression = 0;
-    int avoidemo = 0;
-    int overwhlmemo = 0;
-    int eatanx = 0;
-    int diffrelax = 0;
-    int interoaware = 0;
-    int physsenseat = 0;
-    int hungeranx = 0;
-    int ptsd = 0;
-    int fearatten = 0;
-    int gad = 0;
-    int allornothing = 0;
-    int iuc = 0;
-    int ruminate = 0;
-    int postevprocess = 0;
-    int obsess = 0;
-    int repthghtfood = 0;
-    int mealrum = 0;
-    int skipmeal = 0;
-    int diet = 0;
-    int vomit = 0;
-    int laxative = 0;
-    int diuretic = 0;
-    int compuls = 0;
-    int sleepdiff = 0;
-    int diffdrinkpublic = 0;
-    int diffeatpublic = 0;
-    int foodavoid = 0;
-    int diffidentemo = 0;
-    int disgust = 0;
-    int hrtrace = 0;
-    int ocd = 0;
-    int socialintanx = 0;
-    int adhd = 0;
-    int alcsubuse = 0;
-    int sympwointerv = 0;
+    int fowg = 0; // Fear of Weight Gain
+    int drivethin = 0; // Drive for Thinness
+    int overvalwtshape = 0; // Overvaluation of Weight and Shape
+    int fearreject = 0; // Fear of Rejection
+    int fearmstkes = 0; // Fear of Making Mistakes
+    int highstndrds = 0; // High Standards
+    int SAA = 0; // Social Appearance Anxiety
+    int worry = 0; // Worry
+    int selfcrit = 0; // Self-Criticism
+    int fearlosgcntrol = 0; // Fear of Losing Control
+    int bodydiss = 0; // Body Dissatisfaction
+    int feelineffectve = 0; // Feeling Ineffective
+    int cogrestraint = 0; // Cognitive Restraint
+    int eatrules = 0; // Eating Rules
+    int binge = 0; // Binge Eating
+    int excexercse = 0; // Excessive Exercise
+    int bodycheck = 0; // Body Checking
+    int impulse = 0; // Impulsivity
+    int shame = 0; // Shame
+    int guilt = 0; // Guilt
+    int depression = 0; // Depression
+    int avoidemo = 0; // Avoiding Emotions
+    int overwhlmemo = 0; // Overwhelming Emotions
+    int eatanx = 0; // Eating Anxiety
+    int diffrelax = 0; // Difficulty Relaxing
+    int interoaware = 0; // Interoceptive Awareness
+    int physsenseat = 0; // Physical Sensations of Eating
+    int hungeranx = 0; // Hunger Anxiety
+    int ptsd = 0; // Post-Traumatic Stress Disorder
+    int fearatten = 0; // Fear of Attention
+    int gad = 0; // Generalized Anxiety Disorder
+    int allornothing = 0; // All or Nothing Perfection
+    int iuc = 0; // Intolerance of Uncertainty
+    int ruminate = 0; // Rumination
+    int postevprocess = 0; // Post-event Processing
+    int obsess = 0; // Obsessions
+    int repthghtfood = 0; // Repetitive Thoughts about Food
+    int mealrum = 0; // Meal Rumination
+    int skipmeal = 0; // Skipping Meals
+    int diet = 0; // Dieting
+    int vomit = 0; // Self-induced Vomiting
+    int laxative = 0; // Laxative Use
+    int diuretic = 0; // Diuretic Use
+    int compuls = 0; // Compulsions
+    int sleepdiff = 0; // Sleep Difficulties
+    int diffdrinkpublic = 0; // Difficulty Drinking in Public
+    int diffeatpublic = 0; // Difficulty Eating in Public
+    int foodavoid = 0; // Food Avoidance
+    int diffidentemo = 0; // Difficulty Identifying Emotions
+    int disgust = 0; // Disgust
+    int hrtrace = 0; // Heart Racing
+    int ocd = 0; // OCD
+    int socialintanx = 0; // Social Interaction Anxiety
+    int adhd = 0; // ADHD
+    int alcsubuse = 0; // Alcohol and Substance Use
+    //int sympwointerv = 0;
     //define arrays for each column
     double[] fowgList = new double[75];
     double[] drivethinList = new double[75];
@@ -144,7 +144,7 @@ public class GUI implements ActionListener {
     double[] socialintanxList = new double[75];
     double[] adhdList = new double[75];
     double[] alcsubuseList = new double[75];
-    double[] sympwointervList = new double[75];
+    //double[] sympwointervList = new double[75];
     //define average doubles
     double fowgMean = 0;
     double drivethinMean = 0;
@@ -201,7 +201,7 @@ public class GUI implements ActionListener {
     double socialintanxMean = 0;
     double adhdMean = 0;
     double alcsubuseMean = 0;
-    double sympwointervMean = 0;
+    //double sympwointervMean = 0;
     //define Hashmaps
     HashMap<String,Double> map1 = new HashMap<String,Double>();
 
@@ -272,348 +272,349 @@ public class GUI implements ActionListener {
                 // use comma as separator
                 String[] question = line.split(csvSplitBy);
                 int column_count = question.length;
+                //System.out.println(column_count);
 
                 if (line_number == 1) {
                     for (int i = 0; i < column_count; i++) {
-                        if (question[i].startsWith("[2_VAS]")) {
+                        if (question[i].contains("I am terrified of gaining weight.")) {
                             fowg = i;
                             //System.out.println("fowg:" + fowg);
                         }
-                        if (question[i].startsWith("[3_VAS]")) {
+                        if (question[i].contains("I am preoccupied with the desire to be thinner.")) {
                             drivethin = i;
                         }
-                        if (question[i].startsWith("[4_VAS]")) {
+                        if (question[i].contains("My weight and/or shape influences how I think about (judge) myself as a person.")) {
                             overvalwtshape = i;
                         }
-                        if (question[i].startsWith("[5_VAS]")) {
+                        if (question[i].contains("I am afraid that others will not approve of me and reject me.")) {
                             fearreject = i;
                         }
-                        if (question[i].startsWith("[6_VAS]")) {
+                        if (question[i].contains("I am afraid of making mistakes.")) {
                             fearmstkes = i;
                         }
-                        if (question[i].startsWith("[8_VAS]")) {
+                        if (question[i].contains("I set higher goals for myself than most people.")) {
                             highstndrds = i;
                         }
-                        if (question[i].startsWith("[10_VAS]")) { //?
+                        if (question[i].contains("I worry people will judge the way I look negatively.")) {
                             SAA = i;
                         }
-                        if (question[i].startsWith("[11_VAS]")) {
+                        if (question[i].contains("I am always worrying about something.")) {
                             worry = i;
                         }
-                        if (question[i].startsWith("[14_VAS]")) {
+                        if (question[i].contains("I'm disapproving and judgmental about my own flaws and inadequacies.")) {
                             selfcrit = i;
                         }
-                        if (question[i].startsWith("[16_VAS]")) {
+                        if (question[i].contains("I am afraid of losing control.")) {
                             fearlosgcntrol = i;
                         }
-                        if (question[i].startsWith("[17_VAS]")) {
+                        if (question[i].contains("I do not like how my body looks.")) {
                             bodydiss = i;
                         }
-                        if (question[i].startsWith("[18_VAS]")) {
+                        if (question[i].contains("I feel ineffective as a person.")) {
                             feelineffectve = i;
                         }
-                        if (question[i].startsWith("[2_VAS]")) { //
+                        if (question[i].contains("I have been deliberately trying to limit the amount of food I eat to influence shape or weight (whether or not I have succeeded).")) {
                             cogrestraint = i;
                         }
-                        if (question[i].startsWith("[24_VAS]")) {
+                        if (question[i].contains("I have tried to follow definite rules regarding eating in order to influence shape or weight.")) {
                             eatrules = i;
                         }
-                        if (question[i].startsWith("[28_VAS]")) {
+                        if (question[i].contains("I eat a very large amount of food in a short period of time and feel out of control.")) {
                             binge = i;
                         }
-                        if (question[i].startsWith("[29_VAS]")) {
+                        if (question[i].contains("I feel compelled to exercise and that I must exercise for a certain amount of time and/or in a strenuous manner.")) {
                             excexercse = i;
                         }
-                        if (question[i].startsWith("[30_VAS]")) {
+                        if (question[i].contains("I frequently check to see if my body has changed (e.g. by pinching).")) {
                             bodycheck = i;
                         }
-                        if (question[i].startsWith("[35_VAS]")) {
+                        if (question[i].contains("I have trouble controlling my impulses.")) {
                             impulse = i;
                         }
-                        if (question[i].startsWith("[38_VAS]")) {
+                        if (question[i].contains("I feel ashamed.")) {
                             shame = i;
                         }
-                        if (question[i].startsWith("[37_VAS]")) {
+                        if (question[i].contains("I feel guilty.")) {
                             guilt = i;
                         }
-                        if (question[i].startsWith("[39_VAS]")) {
+                        if (question[i].contains("I feel sad and depressed.")) {
                             depression = i;
                         }
-                        if (question[i].startsWith("[40_VAS]")) {
+                        if (question[i].contains("I try to avoid my emotions.")) {
                             avoidemo = i;
                         }
-                        if (question[i].startsWith("[41_VAS]")) {
+                        if (question[i].contains("I experience my emotions as overwhelming and out of control.")) {
                             overwhlmemo = i;
                         }
-                        if (question[i].startsWith("[43_VAS]")) {
+                        if (question[i].contains("I feel anxious when I eat.")) {
                             eatanx = i;
                         }
-                        if (question[i].startsWith("[45_VAS]")) {
+                        if (question[i].contains("I find it difficult to relax.")) {
                             diffrelax = i;
                         }
-                        if (question[i].startsWith("[47_VAS]")) { //?
+                        if (question[i].contains("I am very sensitive to changes in my internal bodily sensations.")) {
                             interoaware = i;
                         }
-                        if (question[i].startsWith("[48_VAS]")) {
+                        if (question[i].contains("I don't like the physical sensations I feel when eating.")) {
                             physsenseat = i;
                         }
-                        if (question[i].startsWith("[49_VAS]")) {
+                        if (question[i].contains("Feeling hungry makes me anxious.")) {
                             hungeranx = i;
                         }
-                        if (question[i].startsWith("[50_VAS]")) { //?
+                        if (question[i].contains("I have repeated disturbing memories thoughts or images about a stressful experience from the past.")) {
                             ptsd = i;
                         }
-                        if (question[i].startsWith("[53_VAS]")) {
+                        if (question[i].contains("I worry I might do something to attract the attention of other people.")) {
                             fearatten = i;
                         }
-                        if (question[i].startsWith("[2_VAS]")) { //
+                        if (question[i].contains("My worries overwhelm me.")) {
                             gad = i;
                         }
-                        if (question[i].startsWith("[7_VAS]")) { //?
+                        if (question[i].contains("If I fail partly it is as bad as being a complete failure.")) {
                             allornothing = i;
                         }
-                        if (question[i].startsWith("[9_VAS]")) {
+                        if (question[i].contains("I cannot stand not knowing what is going to happen in the future.")) {
                             iuc = i;
                         }
-                        if (question[i].startsWith("[12_VAS]")) {
+                        if (question[i].contains("I have repeated thoughts or images about an event that happened and wishing it had gone better.")) {
                             ruminate = i;
                         }
-                        if (question[i].startsWith("[13_VAS]")) { //?
+                        if (question[i].contains("I have thoughts or images about an event that occurred over and over again that resulted in my feelings getting worse and worse.")) {
                             postevprocess = i;
                         }
-                        if (question[i].startsWith("[2_VAS]")) { //
+                        if (question[i].contains("I am upset about unpleasant thoughts that come into my mind against my will.")) {
                             obsess = i;
                         }
-                        if (question[i].startsWith("[19_VAS]")) {
+                        if (question[i].contains("I have thoughts about food that I cannot stop.")) {
                             repthghtfood = i;
                         }
-                        if (question[i].startsWith("[20_VAS]")) {
+                        if (question[i].contains(" think about a recent meal time wishing it had gone better.")) {
                             mealrum = i;
                         }
-                        if (question[i].startsWith("[21_VAS]")) {
+                        if (question[i].contains("I have skipped meals.")) {
                             skipmeal = i;
                         }
-                        if (question[i].startsWith("[22_VAS]")) {
+                        if (question[i].contains("People would be surprised if they knew how little I eat.")) {
                             diet = i;
                         }
-                        if (question[i].startsWith("[25_VAS]")) {
+                        if (question[i].contains("I vomit in order to lose weight.")) {
                             vomit = i;
                         }
-                        if (question[i].startsWith("[26_VAS]")) {
+                        if (question[i].contains("I use laxatives in order to lose weight.")) {
                             laxative = i;
                         }
-                        if (question[i].startsWith("[27_VAS]")) {
+                        if (question[i].contains("I use diuretics in order to lose weight.")) {
                             diuretic = i;
                         }
-                        if (question[i].startsWith("[31_VAS]")) { //?
+                        if (question[i].contains("I feel compelled to act in a certain way to get rid of thoughts I am having even if it is senseless or excessive.")) {
                             compuls = i;
                         }
-                        if (question[i].startsWith("[32_VAS]")) {
+                        if (question[i].contains("I have sleep difficulties.")) {
                             sleepdiff = i;
                         }
-                        if (question[i].startsWith("[33_VAS]")) {
+                        if (question[i].contains("I would find it difficult to drink something in front of a group of people.")) {
                             diffdrinkpublic = i;
                         }
-                        if (question[i].startsWith("[34_VAS]")) {
+                        if (question[i].contains("It would make me feel self-conscious to eat in front of a stranger at a restaurant.")) {
                             diffeatpublic = i;
                         }
-                        if (question[i].startsWith("[36_VAS]")) {
+                        if (question[i].contains("There are certain foods I avoid because they make me anxious.")) {
                             foodavoid = i;
                         }
-                        if (question[i].startsWith("[42_VAS]")) {
+                        if (question[i].contains("I have no idea how I am feeling.")) {
                             diffidentemo = i;
                         }
-                        if (question[i].startsWith("[51_VAS]")) {
+                        if (question[i].contains("When I notice that I feel nauseous I worry about vomiting.")) {
                             disgust = i;
                         }
-                        if (question[i].startsWith("[46_VAS]")) {
+                        if (question[i].contains("My heart races for no good reason.")) {
                             hrtrace = i;
                         }
-                        if (question[i].startsWith("[2_VAS]")) { //
+                        if (question[i].contains("I frequently get nasty thoughts and feel I must do something in order to get rid of them")) {
                             ocd = i;
                         }
-                        if (question[i].startsWith("[52_VAS]")) {
+                        if (question[i].contains("When mixing socially I am uncomfortable.")) {
                             socialintanx = i;
                         }
-                        if (question[i].startsWith("[2_VAS]")) { //
+                        if (question[i].contains("I am often forgetful in daily activities (e.g. chores running errands returning calls paying bills keeping appointments).")) {
                             adhd = i;
                         }
-                        if (question[i].startsWith("[56_VAS]")) {
+                        if (question[i].contains("I have failed to do what was normally expected of me because of drinking and/or substance use.")) {
                             alcsubuse = i;
                         }
-                        if (question[i].startsWith("[2_VAS]")) { //
+                        /*if (question[i].contains("")) {
                             sympwointerv = i;
-                        }
+                        }*/
                     }
                 } else {
-                    if (!question[fowg].isEmpty()) {
+                    if (!question[fowg].isBlank()) {
                         fowgList[n]= Double.parseDouble(question[fowg]);
                     }
-                    if (!question[drivethin].isEmpty()) {
+                    if (!question[drivethin].isBlank()) {
                         drivethinList[n]= Double.parseDouble(question[drivethin]);
                     }
-                    if (!question[overvalwtshape].isEmpty()) {
+                    if (!question[overvalwtshape].isBlank()) {
                         overvalwtshapeList[n]= Double.parseDouble(question[overvalwtshape]);
                     }
-                    if (!question[fearreject].isEmpty()) {
+                    if (!question[fearreject].isBlank()) {
                         fearrejectList[n]= Double.parseDouble(question[fearreject]);
                     }
-                    if (!question[fearmstkes].isEmpty()) {
+                    if (!question[fearmstkes].isBlank()) {
                         fearmstkesList[n]= Double.parseDouble(question[fearmstkes]);
                     }
-                    if (!question[highstndrds].isEmpty()) {
+                    if (!question[highstndrds].isBlank()) {
                         highstndrdsList[n]= Double.parseDouble(question[highstndrds]);
                     }
-                    if (!question[SAA].isEmpty()) {
+                    if (!question[SAA].isBlank()) {
                         SAAList[n]= Double.parseDouble(question[SAA]);
                     }
-                    if (!question[worry].isEmpty()) {
+                    if (!question[worry].isBlank()) {
                         worryList[n]= Double.parseDouble(question[worry]);
                     }
-                    if (!question[selfcrit].isEmpty()) {
+                    if (!question[selfcrit].isBlank()) {
                         selfcritList[n]= Double.parseDouble(question[selfcrit]);
                     }
-                    if (!question[fearlosgcntrol].isEmpty()) {
+                    if (!question[fearlosgcntrol].isBlank()) {
                         fearlosgcntrolList[n]= Double.parseDouble(question[fearlosgcntrol]);
                     }
-                    if (!question[bodydiss].isEmpty()) {
+                    if (!question[bodydiss].isBlank()) {
                         bodydissList[n]= Double.parseDouble(question[bodydiss]);
                     }
-                    if (!question[feelineffectve].isEmpty()) {
+                    if (!question[feelineffectve].isBlank()) {
                         feelineffectveList[n]= Double.parseDouble(question[feelineffectve]);
                     }
-                    if (!question[cogrestraint].isEmpty()) {
+                    if (!question[cogrestraint].isBlank()) {
                         cogrestraintList[n]= Double.parseDouble(question[cogrestraint]);
                     }
-                    if (!question[eatrules].isEmpty()) {
+                    if (!question[eatrules].isBlank()) {
                         eatrulesList[n]= Double.parseDouble(question[eatrules]);
                     }
-                    if (!question[binge].isEmpty()) {
+                    if (!question[binge].isBlank()) {
                         bingeList[n]= Double.parseDouble(question[binge]);
                     }
-                    if (!question[excexercse].isEmpty()) {
+                    if (!question[excexercse].isBlank()) {
                         excexercseList[n]= Double.parseDouble(question[excexercse]);
                     }
-                    if (!question[bodycheck].isEmpty()) {
+                    if (!question[bodycheck].isBlank()) {
                         bodycheckList[n]= Double.parseDouble(question[bodycheck]);
                     }
-                    if (!question[impulse].isEmpty()) {
+                    if (!question[impulse].isBlank()) {
                         impulseList[n]= Double.parseDouble(question[impulse]);
                     }
-                    if (!question[shame].isEmpty()) {
+                    if (!question[shame].isBlank()) {
                         shameList[n]= Double.parseDouble(question[shame]);
                     }
-                    if (!question[guilt].isEmpty()) {
+                    if (!question[guilt].isBlank()) {
                         guiltList[n]= Double.parseDouble(question[guilt]);
                     }
-                    if (!question[depression].isEmpty()) {
+                    if (!question[depression].isBlank()) {
                         depressionList[n]= Double.parseDouble(question[depression]);
                     }
-                    if (!question[avoidemo].isEmpty()) {
+                    if (!question[avoidemo].isBlank()) {
                         avoidemoList[n]= Double.parseDouble(question[avoidemo]);
                     }
-                    if (!question[overwhlmemo].isEmpty()) {
+                    if (!question[overwhlmemo].isBlank()) {
                         overwhlmemoList[n]= Double.parseDouble(question[overwhlmemo]);
                     }
-                    if (!question[eatanx].isEmpty()) {
+                    if (!question[eatanx].isBlank()) {
                         eatanxList[n]= Double.parseDouble(question[eatanx]);
                     }
-                    if (!question[diffrelax].isEmpty()) {
+                    if (!question[diffrelax].isBlank()) {
                         diffrelaxList[n]= Double.parseDouble(question[diffrelax]);
                     }
-                    if (!question[interoaware].isEmpty()) {
+                    if (!question[interoaware].isBlank()) {
                         interoawareList[n]= Double.parseDouble(question[interoaware]);
                     }
-                    if (!question[physsenseat].isEmpty()) {
+                    if (!question[physsenseat].isBlank()) {
                         physsenseatList[n]= Double.parseDouble(question[physsenseat]);
                     }
-                    if (!question[hungeranx].isEmpty()) {
+                    if (!question[hungeranx].isBlank()) {
                         hungeranxList[n]= Double.parseDouble(question[hungeranx]);
                     }
-                    if (!question[ptsd].isEmpty()) {
+                    if (!question[ptsd].isBlank()) {
                         ptsdList[n]= Double.parseDouble(question[ptsd]);
                     }
-                    if (!question[fearatten].isEmpty()) {
+                    if (!question[fearatten].isBlank()) {
                         fearattenList[n]= Double.parseDouble(question[fearatten]);
                     }
-                    if (!question[gad].isEmpty()) {
+                    if (!question[gad].isBlank()) {
                         gadList[n]= Double.parseDouble(question[gad]);
                     }
-                    if (!question[allornothing].isEmpty()) {
+                    if (!question[allornothing].isBlank()) {
                         allornothingList[n]= Double.parseDouble(question[allornothing]);
                     }
-                    if (!question[iuc].isEmpty()) {
+                    if (!question[iuc].isBlank()) {
                         iucList[n]= Double.parseDouble(question[iuc]);
                     }
-                    if (!question[ruminate].isEmpty()) {
+                    if (!question[ruminate].isBlank()) {
                         ruminateList[n]= Double.parseDouble(question[ruminate]);
                     }
-                    if (!question[postevprocess].isEmpty()) {
+                    if (!question[postevprocess].isBlank()) {
                         postevprocessList[n]= Double.parseDouble(question[postevprocess]);
                     }
-                    if (!question[obsess].isEmpty()) {
+                    if (!question[obsess].isBlank()) {
                         obsessList[n]= Double.parseDouble(question[obsess]);
                     }
-                    if (!question[repthghtfood].isEmpty()) {
+                    if (!question[repthghtfood].isBlank()) {
                         repthghtfoodList[n]= Double.parseDouble(question[repthghtfood]);
                     }
-                    if (!question[mealrum].isEmpty()) {
+                    if (!question[mealrum].isBlank()) {
                         mealrumList[n]= Double.parseDouble(question[mealrum]);
                     }
-                    if (!question[skipmeal].isEmpty()) {
+                    if (!question[skipmeal].isBlank()) {
                         skipmealList[n]= Double.parseDouble(question[skipmeal]);
                     }
-                    if (!question[diet].isEmpty()) {
+                    if (!question[diet].isBlank()) {
                         dietList[n]= Double.parseDouble(question[diet]);
                     }
-                    if (!question[vomit].isEmpty()) {
+                    if (!question[vomit].isBlank()) {
                         vomitList[n]= Double.parseDouble(question[vomit]);
                     }
-                    if (!question[laxative].isEmpty()) {
+                    if (!question[laxative].isBlank()) {
                         laxativeList[n]= Double.parseDouble(question[laxative]);
                     }
-                    if (!question[diuretic].isEmpty()) {
+                    if (!question[diuretic].isBlank()) {
                         diureticList[n]= Double.parseDouble(question[diuretic]);
                     }
-                    if (!question[compuls].isEmpty()) {
+                    if (!question[compuls].isBlank()) {
                         compulsList[n]= Double.parseDouble(question[compuls]);
                     }
-                    if (!question[sleepdiff].isEmpty()) {
+                    if (!question[sleepdiff].isBlank()) {
                         sleepdiffList[n]= Double.parseDouble(question[sleepdiff]);
                     }
-                    if (!question[diffdrinkpublic].isEmpty()) {
+                    if (!question[diffdrinkpublic].isBlank()) {
                         diffdrinkpublicList[n]= Double.parseDouble(question[diffdrinkpublic]);
                     }
-                    if (!question[diffeatpublic].isEmpty()) {
+                    if (!question[diffeatpublic].isBlank()) {
                         diffeatpublicList[n]= Double.parseDouble(question[diffeatpublic]);
                     }
-                    if (!question[foodavoid].isEmpty()) {
+                    if (!question[foodavoid].isBlank()) {
                         foodavoidList[n]= Double.parseDouble(question[foodavoid]);
                     }
-                    if (!question[diffidentemo].isEmpty()) {
+                    if (!question[diffidentemo].isBlank()) {
                         diffidentemoList[n]= Double.parseDouble(question[diffidentemo]);
                     }
-                    if (!question[disgust].isEmpty()) {
+                    if (!question[disgust].isBlank()) {
                         disgustList[n]= Double.parseDouble(question[disgust]);
                     }
-                    if (!question[hrtrace].isEmpty()) {
+                    if (!question[hrtrace].isBlank()) {
                         hrtraceList[n]= Double.parseDouble(question[hrtrace]);
                     }
-                    if (!question[ocd].isEmpty()) {
+                    if (!question[ocd].isBlank()) {
                         ocdList[n]= Double.parseDouble(question[ocd]);
                     }
-                    if (!question[socialintanx].isEmpty()) {
+                    if (!question[socialintanx].isBlank()) {
                         socialintanxList[n]= Double.parseDouble(question[socialintanx]);
                     }
-                    if (!question[adhd].isEmpty()) {
+                    if (!question[adhd].isBlank()) {
                         adhdList[n]= Double.parseDouble(question[adhd]);
                     }
-                    if (!question[alcsubuse].isEmpty()) {
+                    if (!question[alcsubuse].isBlank()) {
                         alcsubuseList[n]= Double.parseDouble(question[alcsubuse]);
                     }
-                    if (!question[sympwointerv].isEmpty()) {
+                    /*if (!question[sympwointerv].isBlank()) {
                         sympwointervList[n]= Double.parseDouble(question[sympwointerv]);
-                    }
+                    }*/
                     n++;
                 }
             }
@@ -716,7 +717,9 @@ public class GUI implements ActionListener {
         socialintanxMean = average(socialintanxList);
         adhdMean = average(adhdList);
         alcsubuseMean = average(alcsubuseList);
-        sympwointervMean = average(sympwointervList);
+        //sympwointervMean = average(sympwointervList);
+
+        System.out.println("drivethin: " + drivethinMean);
 
             /*System.out.println("fearwghtgain: " + fearwghtgainMean);
             System.out.println("drivethin: " + drivethinMean);
@@ -791,7 +794,7 @@ public class GUI implements ActionListener {
         map1.put("socialintanx", socialintanxMean);
         map1.put("adhd", adhdMean);
         map1.put("alcsubuse", alcsubuseMean);
-        map1.put("sympwointerv", sympwointervMean);
+        //map1.put("sympwointerv", sympwointervMean);
     }
 
 
