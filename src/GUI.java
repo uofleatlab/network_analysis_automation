@@ -796,6 +796,40 @@ public class GUI implements ActionListener {
         map1.put("alcsubuse", alcsubuseMean);
         //map1.put("sympwointerv", sympwointervMean);
     }
+    
+    public List<List<String>> readInCentrality(String path) {
+
+    List<List<String>> centrality = new ArrayList<>();
+        
+    try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] values = line.split(COMMA_DELIMITER);
+            records.add(Arrays.asList(values));
+        }
+    }
+
+        return centrality;
+        
+    }
+
+    public void runNetwork(String path) throws IOException, URISyntaxException, ScriptException {
+        RenjinScriptEngine engine = new RenjinScriptEngine();
+        String scriptContent = RUtils.getScriptContent();
+        engine.put("input", path);
+        engine.eval(scriptContent);
+        String centralityPath = (String) engine.eval("runNetwork(input)");
+    }
+    
+    String getScriptContent() throws IOException, URISyntaxException {
+        URI rScriptUri = RUtils.class.getClassLoader().getResource("script.R").toURI();
+        Path inputScript = Paths.get(rScriptUri);
+        return Files.lines(inputScript).collect(Collectors.joining());
+    }
+    
+    public void displayTreatment() {
+        \\last function to do
+    }
 
 
 }
