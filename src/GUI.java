@@ -1,3 +1,15 @@
+/*
+To DO before demo
+
+-save sorted columns as csv
+-sort hash map
+-display treatments
+
+-test/debug
+
+*/
+
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.BorderFactory;
