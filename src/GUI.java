@@ -1,11 +1,9 @@
 /*
 To DO before demo
 
--save sorted columns as csv
--sort hash map
--display treatments
-
--test/debug
+-save sorted columns as csv (Chris)
+-sort hash map (Chris)
+-display treatments (Shaye)
 
 */
 
