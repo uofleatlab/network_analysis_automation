@@ -303,9 +303,9 @@ public class Main implements ActionListener {
             textFileManager.writeTextFile(this, testingFilePath);
             NetworkAnalysis networkAnalysis = new NetworkAnalysis();
             networkAnalysis.runNetwork();
-            List<String> newList = textFileManager.readTextFile(testingFilePath);
+            List<String> treatmentSuggestionsToDisplay = textFileManager.readTextFile(testingFilePath);
             createMap2();
-            displayTreatment(newList);
+            displayTreatment(treatmentSuggestionsToDisplay);
 
         }
         else {
