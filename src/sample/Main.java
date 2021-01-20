@@ -1,12 +1,8 @@
-/*
-To DO before demo
+package sample;
 
--save sorted columns as csv (Chris)
--sort hash map (Chris)
--display treatments (Shaye)
+//import org.codehaus.plexus.util.StringUtils;
 
-*/
-
+import com.sun.deploy.util.StringUtils;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,24 +11,20 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
+import javax.xml.soap.Text;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 //import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
-public class GUI implements ActionListener {
+public class Main implements ActionListener {
 
     private JLabel label;
     private JLabel label2;
@@ -51,7 +43,7 @@ public class GUI implements ActionListener {
     int fearreject = 0; // Fear of Rejection
     int fearmstkes = 0; // Fear of Making Mistakes
     int highstndrds = 0; // High Standards
-    int SAA = 0; // Social Appearance Anxiety
+    int socappearanx = 0; // Social Appearance Anxiety
     int worry = 0; // Worry
     int selfcrit = 0; // Self-Criticism
     int fearlosgcntrol = 0; // Fear of Losing Control
@@ -108,7 +100,7 @@ public class GUI implements ActionListener {
     double[] fearrejectList = new double[75];
     double[] fearmstkesList = new double[75];
     double[] highstndrdsList = new double[75];
-    double[] SAAList = new double[75];
+    double[] socappearanxList = new double[75];
     double[] worryList = new double[75];
     double[] selfcritList = new double[75];
     double[] fearlosgcntrolList = new double[75];
@@ -165,7 +157,7 @@ public class GUI implements ActionListener {
     double fearrejectMean = 0;
     double fearmstkesMean = 0;
     double highstndrdsMean = 0;
-    double SAAMean = 0;
+    double socappearanxMean = 0;
     double worryMean = 0;
     double selfcritMean = 0;
     double fearlosgcntrolMean = 0;
@@ -217,13 +209,22 @@ public class GUI implements ActionListener {
     //double sympwointervMean = 0;
     //define Hashmaps
     HashMap<String,Double> map1 = new HashMap<String,Double>();
+
     HashMap<String,String> map2 = new HashMap<String,String>();
     //define top symptom variables
     String symp1 = "";
     String symp2 = "";
     String symp3 = "";
 
-    public GUI() {
+    SortedSet<String> keys;
+    List<Map<String, String>> maps;
+
+    public static void main(String[] args) {
+
+        new Main();
+    }
+
+    public Main() {
 
         frame = new JFrame();
 
@@ -235,6 +236,15 @@ public class GUI implements ActionListener {
         label2 = new JLabel("No file selected.", SwingConstants.CENTER);
         label2.setPreferredSize(new Dimension(500,100));
 
+        output1 = new JLabel("", SwingConstants.CENTER);
+        output1.setPreferredSize(new Dimension(500,200));
+
+        output2 = new JLabel("", SwingConstants.CENTER);
+        output2.setPreferredSize(new Dimension(500,200));
+
+        output3 = new JLabel("", SwingConstants.CENTER);
+        output3.setPreferredSize(new Dimension(500,200));
+
         panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(150,250,150,250));
         panel.setLayout(new GridLayout(0,1));
@@ -245,6 +255,7 @@ public class GUI implements ActionListener {
         panel.add(output2);
         panel.add(output3);
 
+
         frame.add(panel, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("File Upload");
@@ -253,30 +264,86 @@ public class GUI implements ActionListener {
 
     }
 
-    public static void main(String[] args) {
-        new GUI();
-    }
-
-    @Override
     public void actionPerformed(ActionEvent e) {
+
         int upload = fileChooser.showOpenDialog(null);
+
         if (upload == JFileChooser.APPROVE_OPTION) {
+
             file_upload = fileChooser.getSelectedFile();
             label2.setText(file_upload.getAbsolutePath());
+            System.out.println("file uploaded");
+
             arrayCreation();
+            System.out.println("Array created");
             averageCalculation();
-            createMap1();
+            System.out.println("average calculated");
+            createMap();
+            System.out.println("Map created");
 
+            Map<String, Double> top = map1.keySet().stream().sorted().limit(10).collect(Collectors.toMap(Function.identity(), map1::get));
+            MapConverter mc = new MapConverter();
+            Map<String, String>  topStr = mc.convert(top);
 
+            System.out.println("Top 5 entries computed:");
+
+            List<Map<String, String>> maps = new ArrayList<>();
+            maps.add(topStr);
+
+            // extract all headers
+            SortedSet<String> keys = new TreeSet<>(topStr.keySet());
+            for(Map<String, String> map : maps){
+                keys.addAll(map.keySet());
+            }
+
+            setKeys(keys);
+            setMaps(maps);
+            sample.TextFileManager textFileManager = new TextFileManager();
+            String testingFilePath = "C:\\Users\\Chris Trombley\\Downloads\\centrality.csv"; //TO DO - change this
+            textFileManager.writeTextFile(this, testingFilePath);
+            NetworkAnalysis networkAnalysis = new NetworkAnalysis();
+            networkAnalysis.runNetwork();
+            List<String> newList = textFileManager.readTextFile(testingFilePath);
             createMap2();
-            displayTreatment();
+            displayTreatment(newList);
 
-            /*List<Double> sorted = new ArrayList<>(map1.values());
-            Collections.sort(sorted, Collections.reverseOrder());
-            System.out.println(sorted);*/
         }
         else {
             label2.setText("File Upload Cancelled");
+        }
+
+    }
+
+    public void setMaps(List<Map<String, String>> maps) {
+
+        this.maps = maps;
+
+    }
+
+    public List<Map<String, String>> getMaps() {
+        return maps;
+    }
+
+    public void setKeys(SortedSet<String> keys) {
+
+        this.keys = keys;
+
+    }
+
+    public SortedSet<String> getKeys() {
+
+        return keys;
+
+    }
+
+
+    public class MapConverter {
+        public Map<String, String> convert(Map<String, Double> oldMap) {
+            Map<String, String> ret = new HashMap<String, String>();
+            for (String key : oldMap.keySet()) {
+                ret.put(key, oldMap.get(key).toString());
+            }
+            return ret;
         }
     }
 
@@ -321,7 +388,7 @@ public class GUI implements ActionListener {
                             highstndrds = i;
                         }
                         if (question[i].contains("I worry people will judge the way I look negatively.")) {
-                            SAA = i;
+                            socappearanx = i;
                         }
                         if (question[i].contains("I am always worrying about something.")) {
                             worry = i;
@@ -472,172 +539,172 @@ public class GUI implements ActionListener {
                         }*/
                     }
                 } else {
-                    if (!question[fowg].isBlank()) {
+                    if (!question[fowg].isEmpty()) {
                         fowgList[n]= Double.parseDouble(question[fowg]);
                     }
-                    if (!question[drivethin].isBlank()) {
+                    if (!question[drivethin].isEmpty()) {
                         drivethinList[n]= Double.parseDouble(question[drivethin]);
                     }
-                    if (!question[overvalwtshape].isBlank()) {
+                    if (!question[overvalwtshape].isEmpty()) {
                         overvalwtshapeList[n]= Double.parseDouble(question[overvalwtshape]);
                     }
-                    if (!question[fearreject].isBlank()) {
+                    if (!question[fearreject].isEmpty()) {
                         fearrejectList[n]= Double.parseDouble(question[fearreject]);
                     }
-                    if (!question[fearmstkes].isBlank()) {
+                    if (!question[fearmstkes].isEmpty()) {
                         fearmstkesList[n]= Double.parseDouble(question[fearmstkes]);
                     }
-                    if (!question[highstndrds].isBlank()) {
+                    if (!question[highstndrds].isEmpty()) {
                         highstndrdsList[n]= Double.parseDouble(question[highstndrds]);
                     }
-                    if (!question[SAA].isBlank()) {
-                        SAAList[n]= Double.parseDouble(question[SAA]);
+                    if (!question[socappearanx].isEmpty()) {
+                        socappearanxList[n]= Double.parseDouble(question[socappearanx]);
                     }
-                    if (!question[worry].isBlank()) {
+                    if (!question[worry].isEmpty()) {
                         worryList[n]= Double.parseDouble(question[worry]);
                     }
-                    if (!question[selfcrit].isBlank()) {
+                    if (!question[selfcrit].isEmpty()) {
                         selfcritList[n]= Double.parseDouble(question[selfcrit]);
                     }
-                    if (!question[fearlosgcntrol].isBlank()) {
+                    if (!question[fearlosgcntrol].isEmpty()) {
                         fearlosgcntrolList[n]= Double.parseDouble(question[fearlosgcntrol]);
                     }
-                    if (!question[bodydiss].isBlank()) {
+                    if (!question[bodydiss].isEmpty()) {
                         bodydissList[n]= Double.parseDouble(question[bodydiss]);
                     }
-                    if (!question[feelineffectve].isBlank()) {
+                    if (!question[feelineffectve].isEmpty()) {
                         feelineffectveList[n]= Double.parseDouble(question[feelineffectve]);
                     }
-                    if (!question[cogrestraint].isBlank()) {
+                    if (!question[cogrestraint].isEmpty()) {
                         cogrestraintList[n]= Double.parseDouble(question[cogrestraint]);
                     }
-                    if (!question[eatrules].isBlank()) {
+                    if (!question[eatrules].isEmpty()) {
                         eatrulesList[n]= Double.parseDouble(question[eatrules]);
                     }
-                    if (!question[binge].isBlank()) {
+                    if (!question[binge].isEmpty()) {
                         bingeList[n]= Double.parseDouble(question[binge]);
                     }
-                    if (!question[excexercse].isBlank()) {
+                    if (!question[excexercse].isEmpty()) {
                         excexercseList[n]= Double.parseDouble(question[excexercse]);
                     }
-                    if (!question[bodycheck].isBlank()) {
+                    if (!question[bodycheck].isEmpty()) {
                         bodycheckList[n]= Double.parseDouble(question[bodycheck]);
                     }
-                    if (!question[impulse].isBlank()) {
+                    if (!question[impulse].isEmpty()) {
                         impulseList[n]= Double.parseDouble(question[impulse]);
                     }
-                    if (!question[shame].isBlank()) {
+                    if (!question[shame].isEmpty()) {
                         shameList[n]= Double.parseDouble(question[shame]);
                     }
-                    if (!question[guilt].isBlank()) {
+                    if (!question[guilt].isEmpty()) {
                         guiltList[n]= Double.parseDouble(question[guilt]);
                     }
-                    if (!question[depression].isBlank()) {
+                    if (!question[depression].isEmpty()) {
                         depressionList[n]= Double.parseDouble(question[depression]);
                     }
-                    if (!question[avoidemo].isBlank()) {
+                    if (!question[avoidemo].isEmpty()) {
                         avoidemoList[n]= Double.parseDouble(question[avoidemo]);
                     }
-                    if (!question[overwhlmemo].isBlank()) {
+                    if (!question[overwhlmemo].isEmpty()) {
                         overwhlmemoList[n]= Double.parseDouble(question[overwhlmemo]);
                     }
-                    if (!question[eatanx].isBlank()) {
+                    if (!question[eatanx].isEmpty()) {
                         eatanxList[n]= Double.parseDouble(question[eatanx]);
                     }
-                    if (!question[diffrelax].isBlank()) {
+                    if (!question[diffrelax].isEmpty()) {
                         diffrelaxList[n]= Double.parseDouble(question[diffrelax]);
                     }
-                    if (!question[interoaware].isBlank()) {
+                    if (!question[interoaware].isEmpty()) {
                         interoawareList[n]= Double.parseDouble(question[interoaware]);
                     }
-                    if (!question[physsenseat].isBlank()) {
+                    if (!question[physsenseat].isEmpty()) {
                         physsenseatList[n]= Double.parseDouble(question[physsenseat]);
                     }
-                    if (!question[hungeranx].isBlank()) {
+                    if (!question[hungeranx].isEmpty()) {
                         hungeranxList[n]= Double.parseDouble(question[hungeranx]);
                     }
-                    if (!question[ptsd].isBlank()) {
+                    if (!question[ptsd].isEmpty()) {
                         ptsdList[n]= Double.parseDouble(question[ptsd]);
                     }
-                    if (!question[fearatten].isBlank()) {
+                    if (!question[fearatten].isEmpty()) {
                         fearattenList[n]= Double.parseDouble(question[fearatten]);
                     }
-                    if (!question[gad].isBlank()) {
+                    if (!question[gad].isEmpty()) {
                         gadList[n]= Double.parseDouble(question[gad]);
                     }
-                    if (!question[allornothing].isBlank()) {
+                    if (!question[allornothing].isEmpty()) {
                         allornothingList[n]= Double.parseDouble(question[allornothing]);
                     }
-                    if (!question[iuc].isBlank()) {
+                    if (!question[iuc].isEmpty()) {
                         iucList[n]= Double.parseDouble(question[iuc]);
                     }
-                    if (!question[ruminate].isBlank()) {
+                    if (!question[ruminate].isEmpty()) {
                         ruminateList[n]= Double.parseDouble(question[ruminate]);
                     }
-                    if (!question[postevprocess].isBlank()) {
+                    if (!question[postevprocess].isEmpty()) {
                         postevprocessList[n]= Double.parseDouble(question[postevprocess]);
                     }
-                    if (!question[obsess].isBlank()) {
+                    if (!question[obsess].isEmpty()) {
                         obsessList[n]= Double.parseDouble(question[obsess]);
                     }
-                    if (!question[repthghtfood].isBlank()) {
+                    if (!question[repthghtfood].isEmpty()) {
                         repthghtfoodList[n]= Double.parseDouble(question[repthghtfood]);
                     }
-                    if (!question[mealrum].isBlank()) {
+                    if (!question[mealrum].isEmpty()) {
                         mealrumList[n]= Double.parseDouble(question[mealrum]);
                     }
-                    if (!question[skipmeal].isBlank()) {
+                    if (!question[skipmeal].isEmpty()) {
                         skipmealList[n]= Double.parseDouble(question[skipmeal]);
                     }
-                    if (!question[diet].isBlank()) {
+                    if (!question[diet].isEmpty()) {
                         dietList[n]= Double.parseDouble(question[diet]);
                     }
-                    if (!question[vomit].isBlank()) {
+                    if (!question[vomit].isEmpty()) {
                         vomitList[n]= Double.parseDouble(question[vomit]);
                     }
-                    if (!question[laxative].isBlank()) {
+                    if (!question[laxative].isEmpty()) {
                         laxativeList[n]= Double.parseDouble(question[laxative]);
                     }
-                    if (!question[diuretic].isBlank()) {
+                    if (!question[diuretic].isEmpty()) {
                         diureticList[n]= Double.parseDouble(question[diuretic]);
                     }
-                    if (!question[compuls].isBlank()) {
+                    if (!question[compuls].isEmpty()) {
                         compulsList[n]= Double.parseDouble(question[compuls]);
                     }
-                    if (!question[sleepdiff].isBlank()) {
+                    if (!question[sleepdiff].isEmpty()) {
                         sleepdiffList[n]= Double.parseDouble(question[sleepdiff]);
                     }
-                    if (!question[diffdrinkpublic].isBlank()) {
+                    if (!question[diffdrinkpublic].isEmpty()) {
                         diffdrinkpublicList[n]= Double.parseDouble(question[diffdrinkpublic]);
                     }
-                    if (!question[diffeatpublic].isBlank()) {
+                    if (!question[diffeatpublic].isEmpty()) {
                         diffeatpublicList[n]= Double.parseDouble(question[diffeatpublic]);
                     }
-                    if (!question[foodavoid].isBlank()) {
+                    if (!question[foodavoid].isEmpty()) {
                         foodavoidList[n]= Double.parseDouble(question[foodavoid]);
                     }
-                    if (!question[diffidentemo].isBlank()) {
+                    if (!question[diffidentemo].isEmpty()) {
                         diffidentemoList[n]= Double.parseDouble(question[diffidentemo]);
                     }
-                    if (!question[disgust].isBlank()) {
+                    if (!question[disgust].isEmpty()) {
                         disgustList[n]= Double.parseDouble(question[disgust]);
                     }
-                    if (!question[hrtrace].isBlank()) {
+                    if (!question[hrtrace].isEmpty()) {
                         hrtraceList[n]= Double.parseDouble(question[hrtrace]);
                     }
-                    if (!question[ocd].isBlank()) {
+                    if (!question[ocd].isEmpty()) {
                         ocdList[n]= Double.parseDouble(question[ocd]);
                     }
-                    if (!question[socialintanx].isBlank()) {
+                    if (!question[socialintanx].isEmpty()) {
                         socialintanxList[n]= Double.parseDouble(question[socialintanx]);
                     }
-                    if (!question[adhd].isBlank()) {
+                    if (!question[adhd].isEmpty()) {
                         adhdList[n]= Double.parseDouble(question[adhd]);
                     }
-                    if (!question[alcsubuse].isBlank()) {
+                    if (!question[alcsubuse].isEmpty()) {
                         alcsubuseList[n]= Double.parseDouble(question[alcsubuse]);
                     }
-                    /*if (!question[sympwointerv].isBlank()) {
+                    /*if (!question[sympwointerv].isEmpty()) {
                         sympwointervList[n]= Double.parseDouble(question[sympwointerv]);
                     }*/
                     n++;
@@ -693,7 +760,7 @@ public class GUI implements ActionListener {
         fearrejectMean = average(fearrejectList);
         fearmstkesMean = average(fearmstkesList);
         highstndrdsMean = average(highstndrdsList);
-        SAAMean = average(SAAList);
+        socappearanxMean = average(socappearanxList);
         worryMean = average(worryList);
         selfcritMean = average(selfcritList);
         fearlosgcntrolMean = average(fearlosgcntrolList);
@@ -763,14 +830,14 @@ public class GUI implements ActionListener {
             System.out.println("shame: " + shameMean);*/
     }
 
-    public void createMap1() {
+    public void createMap() {
         map1.put("fowg", fowgMean);
         map1.put("drivethin", drivethinMean);
         map1.put("overvalwtshape", overvalwtshapeMean);
         map1.put("fearreject", fearrejectMean);
         map1.put("fearmstkes", fearmstkesMean);
         map1.put("highstndrds", highstndrdsMean);
-        map1.put("SAA", SAAMean);
+        map1.put("socappearanx", socappearanxMean);
         map1.put("worry", worryMean);
         map1.put("selfcrit", selfcritMean);
         map1.put("fearlosgcntrol", fearlosgcntrolMean);
@@ -821,41 +888,56 @@ public class GUI implements ActionListener {
         map1.put("alcsubuse", alcsubuseMean);
         //map1.put("sympwointerv", sympwointervMean);
     }
-    
-    public List<List<String>> readInCentrality(String path) {
 
-    List<List<String>> centrality = new ArrayList<>();
-        
-    try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] values = line.split(COMMA_DELIMITER);
-            records.add(Arrays.asList(values));
+
+
+    private static <K, V extends Comparable<? super V>> List<Map.Entry<K, V>>
+    findGreatest(Map<K, V> map, int n)
+    {
+        Comparator<? super Map.Entry<K, V>> comparator = new Comparator<Map.Entry<K, V>>()
+                {
+                    @Override
+                    public int compare(Map.Entry<K, V> e0, Map.Entry<K, V> e1)
+                    {
+                        V v0 = e0.getValue();
+                        V v1 = e1.getValue();
+                        return v0.compareTo(v1);
+                    }
+                };
+        PriorityQueue<Map.Entry<K, V>> highest =
+                new PriorityQueue<Map.Entry<K,V>>(n, comparator);
+        for (Map.Entry<K, V> entry : map.entrySet())
+        {
+            highest.offer(entry);
+            while (highest.size() > n)
+            {
+                highest.poll();
+            }
         }
+
+        List<Map.Entry<K, V>> result = new ArrayList<Map.Entry<K,V>>();
+        while (highest.size() > 0)
+        {
+            result.add(highest.poll());
+        }
+        return result;
     }
 
-        return centrality;
-        
+
+
+    public static String getLineFromMap(Map<String, String> someMap, SortedSet<String> keys) {
+        List<String> values = new ArrayList<>();
+        for (String key : keys) {
+            values.add(someMap.get(key) == null ? " " : someMap.get(key));
+        }
+        return StringUtils.join(Arrays.asList(new List[]{values}), ",");
     }
 
-    public void runNetwork(String path) throws IOException, URISyntaxException, ScriptException {
-        RenjinScriptEngine engine = new RenjinScriptEngine();
-        String scriptContent = RUtils.getScriptContent();
-        engine.put("input", path);
-        engine.eval(scriptContent);
-        String centralityPath = (String) engine.eval("runNetwork(input)");
-    }
-    
-    String getScriptContent() throws IOException, URISyntaxException {
-        URI rScriptUri = RUtils.class.getClassLoader().getResource("script.R").toURI();
-        Path inputScript = Paths.get(rScriptUri);
-        return Files.lines(inputScript).collect(Collectors.joining());
-    }
 
     public void createMap2() {
         map2.put("fowg", "Fear of Weight Gain: See page 2 of the interventions database.\nConduct imaginal exposure for fear of weight gain. In session one, provide psychoeducation about imaginal exposure therapy, create an imaginal exposure script, and assign listening to the imaginal exposure script recording for homework. In session two, review safety behaviors, conduct the imaginal exposure, and assign recordings for homework. In sessions three, conduct the imaginal exposure and assign recordings for homework.");
         map2.put("drivethin", "Drive for Thinness: See page 31 of the interventions database.\nIn the first session, introduce thinking errors and automatic thoughts and assign thought logging for homework. In session two, challenge automatic thoughts, identify core beliefs, and assign Historical Test of Beliefs Worksheet for homework. In session three, design behavioral experiments to challenge the core belief related to drive for thinness and have them complete a behavioral experiment for homework.");
-        map2.put("overvalwtshape", "Overvaluation of Weight and Shape: See page 52 of the interventions database.\nIn the first session, introduce thinking errors and automatic thoughts and assign thought logging for homework. In the second session, challenge automatic thoughts and assign homework to challenge more thoughts over the week. Over the next two sessions, conduct the Value Card Sort Activity to assess their priorities, create a pie chart to plot the relative importance of different areas of participants’ lives and weight/shape, and help them set SMART goals for themselves.");
+        map2.put("overvalwtshape", "<html>Overvaluation of Weight and Shape: See page 52 of the interventions database.\nIn the first session, introduce thinking errors and automatic thoughts and assign thought logging for homework. In the second session, challenge automatic thoughts and assign homework to challenge more thoughts over the week. <br> Over the next two sessions, conduct the Value Card Sort Activity to assess their priorities, create a pie chart to plot the relative importance of different areas of participants’ lives and weight/shape, and help them set SMART goals for themselves.</html>");
         map2.put("fearreject", "Fear of Rejection: See page 72 of the interventions database.\nIn session one, explain exposure therapy to the participant, create a hierarchy of situations that the participant avoids because of the fear of rejection, and assign exposures for homework. In session two and three, conduct an in-session exposure and assign exposures for homework.");
         map2.put("fearmstkes", "Fear of Making Mistakes: See page 87 of the interventions database.\nExplore the relationship between fear of making mistakes and ED symptoms, and create a hierarchy of situations that the participant avoids because of the fear of making mistakes, and assign exposures for homework. In session two and three, conduct an in-session exposure and assign exposures for homework.");
         map2.put("highstndrds", "High Standards: See page 93 of the interventions database.\nProvide psychoeducation about perfectionism and how it involves high standards and concern over mistakes and discuss how perfectionism manifests in participants’ life. Discuss how perfectionism rules and assumptions guide behavior and explore high standards participants sets for themselves. Discuss the helpful and unhelpful aspects of pursuing and loosening high standards and create personalized plan with specific goals toward reducing perfectionistic behavior.");
@@ -909,12 +991,19 @@ public class GUI implements ActionListener {
         map2.put("adhd", "ADHD: An intervention has yet to be developed.");
         map2.put("alcsubuse", "Alcohol and substance use: An intervention has yet to be developed.");
     }
-    
-    public void displayTreatment() {
+
+    public void displayTreatment(List<String> sympList) {
         //define symptom variables from array
-        //symp1 =
-        //symp2 =
-        //symp3 =
+
+        symp1 = sympList.get(0);
+        symp2 = sympList.get(1);
+        symp3 = sympList.get(2);
+
+        System.out.println(symp1);
+        System.out.println(symp2);
+        System.out.println(symp3);
+
+
         if (symp1 == "fowg") {
             output1.setText(map2.get("fowg"));
         } if (symp2 == "fowg") {
@@ -929,11 +1018,11 @@ public class GUI implements ActionListener {
         } if (symp3 == "drivethin") {
             output3.setText(map2.get("drivethin"));
         }
-        if (symp1 == "overvalwtshape") {
+        if (symp1.equals("overvaluewghtshp")) {
             output1.setText(map2.get("overvalwtshape"));
-        } if (symp2 == "overvalwtshape") {
+        } if (symp2.equals("overvaluewghtshp")) {
             output2.setText(map2.get("overvalwtshape"));
-        } if (symp3 == "overvalwtshape") {
+        } if (symp3.equals("overvaluewghtshp")) {
             output3.setText(map2.get("overvalwtshape"));
         }
         if (symp1 == "fearreject") {
@@ -978,11 +1067,11 @@ public class GUI implements ActionListener {
         } if (symp3 == "selfcrit") {
             output3.setText(map2.get("selfcrit"));
         }
-        if (symp1 == "fearlosgcntrol") {
+        if (symp1.equals("fearlosecontrol")) {
             output1.setText(map2.get("fearlosgcntrol"));
-        } if (symp2 == "fearlosgcntrol") {
+        } if (symp2.equals("fearlosecontrol")) {
             output2.setText(map2.get("fearlosgcntrol"));
-        } if (symp3 == "fearlosgcntrol") {
+        } if (symp3.equals("fearlosecontrol")) {
             output3.setText(map2.get("fearlosgcntrol"));
         }
         if (symp1 == "bodydiss") {
